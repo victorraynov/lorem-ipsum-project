@@ -3,7 +3,9 @@
 **Live Demo:** https://lorem-ipsum-app-360383538728.europe-west2.run.app
 
 A minimal web application demonstrating Cloud Run deployment with Google Cloud Storage.
-An addition to the code are the Load Balancer + SSL managed certificates and Cloud Run Failover (disabled by default), showcasing a failover mechanism both for location and resource.
+
+An addition to the code are the Load Balancer + SSL managed certificates and Cloud Run Failover (disabled by default),
+showcasing a failover mechanism both for location and resource.
 
 
 ## Quick Deploy
