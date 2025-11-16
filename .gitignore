@@ -1,0 +1,53 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars.backup
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Sensitive files
+*.pem
+*.key
+*.crt
+service-account.json
+credentials.json
+
+# Local development
+.env
+.envrc
+
+# Docker
+.dockerignore
+
+# Actual image file (if large, use Git LFS or exclude)
+# app/static/*.jpg
+# app/static/*.png
