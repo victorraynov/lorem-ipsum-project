@@ -1,38 +1,19 @@
 /******************************************
   Cloud Run Outputs
 ******************************************/
-output "cloud_run_urls" {
-  description = "Cloud Run service URLs"
-  value = {
-    for k, v in module.cloud_run : k => v.service_url
-  }
+output "cloud_run_primary_urls" {
+  description = "Primary region Cloud Run URLs"
+  value       = try(module.cloud_run[0].service_urls, {})
+}
+
+output "cloud_run_failover_urls" {
+  description = "Failover region Cloud Run URLs (if failover_enabled = true)"
+  value       = var.failover_enabled ? try(module.cloud_run_failover[0].service_urls, {}) : {}
 }
 
 output "cloud_run_service_accounts" {
-  description = "Cloud Run service account emails"
-  value = {
-    for k, v in module.cloud_run : k => v.service_account
-  }
-}
-
-/******************************************
-  Artifact Registry Outputs
-******************************************/
-output "artifact_registry_urls" {
-  description = "Artifact Registry repository URLs"
-  value = {
-    for k, v in module.artifact_registry : k => v.repository_url
-  }
-}
-
-/******************************************
-  Storage Outputs
-******************************************/
-output "storage_bucket_names" {
-  description = "Cloud Storage bucket names"
-  value = {
-    for k, v in module.storage : k => v.bucket_name
-  }
+  description = "Service account emails"
+  value       = try(module.cloud_run[0].service_account_emails, {})
 }
 
 /******************************************
@@ -53,11 +34,31 @@ output "load_balancer_url" {
 }
 
 /******************************************
+  Storage Outputs
+******************************************/
+output "storage_bucket_urls" {
+  description = "Storage bucket URLs"
+  value = {
+    for k, v in module.storage : k => v.bucket_url
+  }
+}
+
+/******************************************
   SSL Certificate Outputs
 ******************************************/
 output "ssl_certificates" {
   description = "SSL certificate names"
   value = {
     for k, v in module.ssl : k => v.cert_name
+  }
+}
+
+/******************************************
+  Artifact Registry Outputs
+******************************************/
+output "artifact_registry_urls" {
+  description = "Artifact Registry repository URLs"
+  value = {
+    for k, v in try(module.artifact_registry, {}) : k => try(v.repository_url, "")
   }
 }

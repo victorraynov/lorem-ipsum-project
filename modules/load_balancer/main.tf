@@ -18,21 +18,15 @@ resource "google_compute_backend_service" "default" {
     description     = "Primary region backend (${var.primary_region})"
   }
 
+  # Failover backend
   backend {
     group           = var.failover_neg
     balancing_mode  = "UTILIZATION"
     capacity_scaler = 1.0
     description     = "Failover region backend (${var.failover_region})"
-    failover        = true
   }
 
   health_checks = [google_compute_health_check.default.id]
-
-  failover_policy {
-    disable_connection_drain_on_failover = false
-    drop_traffic_if_unhealthy            = true
-    failover_ratio                       = 1.0
-  }
 }
 
 resource "google_compute_health_check" "default" {

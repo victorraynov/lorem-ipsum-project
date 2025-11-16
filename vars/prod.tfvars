@@ -11,6 +11,7 @@ failover_region  = "us-central1"
 /******************************************
   Module Toggles
 ******************************************/
+failover_enabled = false
 enabled_modules = {
   artifact_registry = true
   storage           = true
@@ -85,6 +86,34 @@ cloud_run_services = {
       managed-by  = "terraform"
     }
   }
+  # lorem-ipsum-app-2 = {
+  #   image = "europe-west2-docker.pkg.dev/studious-camp-478213-k4/lorem-ipsum/lorem-ipsum-app:latest"
+  #
+  #   cpu    = "1"
+  #   memory = "512Mi"
+  #
+  #   min_instances = 0
+  #   max_instances = 10
+  #
+  #   max_concurrency = 80
+  #   timeout         = "300s"
+  #
+  #   allow_unauthenticated = true
+  #   ingress               = "INGRESS_TRAFFIC_ALL"
+  #
+  #   storage_bucket_key = "lorem-ipsum-assets"
+  #   image_blob_name    = "lorem-ipsum.jpg"
+  #
+  #   env_vars = {
+  #     ENVIRONMENT = "production"
+  #   }
+  #
+  #   labels = {
+  #     app         = "lorem-ipsum"
+  #     environment = "production"
+  #     managed-by  = "terraform"
+  #   }
+  # }
 }
 
 /******************************************

@@ -11,15 +11,11 @@ variable "region" {
   type        = string
 }
 
-variable "service_name" {
-  description = "Service name (from for_each key)"
-  type        = string
-}
-
-variable "service_config" {
-  description = "Service configuration"
-  type = object({
+variable "cloud_run_services" {
+  description = "Map of Cloud Run services to create"
+  type = map(object({
     image                 = string
+    port                  = optional(number)
     cpu                   = optional(string)
     memory                = optional(string)
     min_instances         = optional(number)
@@ -29,10 +25,10 @@ variable "service_config" {
     allow_unauthenticated = optional(bool)
     ingress               = optional(string)
     env_vars              = optional(map(string))
-    storage_bucket_key    = optional(string)
-    image_blob_name       = optional(string)
     labels                = optional(map(string))
-  })
+    storage_buckets       = optional(list(string))
+  }))
+  default = {}
 }
 
 variable "storage_bucket_name" {

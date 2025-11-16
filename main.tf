@@ -51,17 +51,11 @@ module "storage" {
 module "cloud_run" {
   source = "./modules/cloud_run"
 
-  for_each = var.enabled_modules.cloud_run ? var.cloud_run_services : {}
+  count = var.enabled_modules.cloud_run ? 1 : 0
 
-  project_id     = var.project_id
-  region         = var.region
-  service_name   = each.key
-  service_config = each.value
-
-  storage_bucket_name = try(
-    [for k, v in module.storage : v.bucket_name if k == each.value.storage_bucket_key][0],
-    ""
-  )
+  project_id         = var.project_id
+  region             = var.primary_region
+  cloud_run_services = var.cloud_run_services
 
   depends_on = [
     google_project_service.required_apis,
@@ -70,17 +64,17 @@ module "cloud_run" {
 }
 
 /******************************************
+/******************************************
   Cloud Run Module - Failover Region
 ******************************************/
 module "cloud_run_failover" {
   source = "./modules/cloud_run"
 
-  for_each = var.enabled_modules.cloud_run ? var.cloud_run_services : {}
+  count = var.enabled_modules.cloud_run && var.failover_enabled ? 1 : 0
 
-  project_id     = var.project_id
-  region         = var.failover_region
-  service_name   = "${each.key}-failover"
-  service_config = each.value
+  project_id         = var.project_id
+  region             = var.failover_region
+  cloud_run_services = var.cloud_run_services
 
   depends_on = [
     google_project_service.required_apis,
@@ -109,22 +103,22 @@ module "ssl" {
 module "load_balancer" {
   source = "./modules/load_balancer"
 
-  for_each = var.enabled_modules.load_balancer ? var.load_balancers : {}
+  for_each = var.enabled_modules.load_balancer && var.failover_enabled ? var.load_balancers : {}
 
   project_id = var.project_id
   lb_name    = each.key
   lb_config  = each.value
 
-  primary_neg    = module.cloud_run_primary[each.value.service_key].neg_id
+  primary_neg    = module.cloud_run[0].neg_ids[each.value.service_key]
   primary_region = var.primary_region
 
-  failover_neg    = module.cloud_run_failover[each.value.service_key].neg_id
+  failover_neg    = module.cloud_run_failover[0].neg_ids[each.value.service_key]
   failover_region = var.failover_region
 
   ssl_cert_id = try(module.ssl[each.value.ssl_cert_key].cert_id, null)
 
   depends_on = [
-    module.cloud_run_primary,
+    module.cloud_run,
     module.cloud_run_failover,
     module.ssl
   ]
