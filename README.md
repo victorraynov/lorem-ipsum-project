@@ -21,7 +21,6 @@ gcloud config set project YOUR_PROJECT_ID
 ### 1.1. Create Terraform State Bucket
 
 ```bash
-PROJECT_ID=$(gcloud config get-value project)
 gsutil mb -l europe-west2 gs://terraform-state
 gsutil versioning set on gs://terraform-state
 ```
