@@ -34,8 +34,8 @@ resource "google_cloud_run_v2_service" "service" {
       image = each.value.image
 
       ports {
-        name           = "http1"
-        container_port = try(each.value.port, 8080)
+        name           = try(each.value.ports.name, "http1")
+        container_port = try(each.value.ports.container_port, 8080)
       }
 
       resources {

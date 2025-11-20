@@ -61,9 +61,14 @@ cloud_run_services = {
   lorem-ipsum-app = {
     image = "europe-west2-docker.pkg.dev/studious-camp-478213-k4/lorem-ipsum/lorem-ipsum-app:latest"
 
-    cpu    = "1"
-    memory = "512Mi"
-
+    cpu           = "1"
+    memory        = "512Mi"
+    ports = [
+      {
+        name           = "http1"
+        container_port = 8080
+      }
+    ]
     min_instances = 0
     max_instances = 10
 
